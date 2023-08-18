@@ -1,0 +1,9 @@
+<form class="mt-3" [formGroup]="form" (ngSubmit)="register()">
+    <div class="">
+      <label for="fullname" class="visually-hidden">Fullname</label>
+      <input type="text" formControlName="fullname" class="form-control" id="fullname" placeholder="Fullname">
+    </div>
+    <div class=" me-2">
+      <button type="submit" [disabled]="!form.valid" class="btn btn-primary  mt-2">Register</button>
+    </div>
+  </form>

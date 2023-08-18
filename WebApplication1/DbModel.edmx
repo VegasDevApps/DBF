@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DBFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fullname" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="QueueId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Queues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderInQueue" Type="int" Nullable="false" />
+          <Property Name="InService" Type="bit" Nullable="false" />
+          <Property Name="CheckIn" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Customers_Queues">
+          <End Role="Queues" Type="Self.Queues" Multiplicity="1" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Queues">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customers">
+              <PropertyRef Name="QueueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Queues_Queues">
+          <End Role="Queues" Type="Self.Queues" Multiplicity="1" />
+          <End Role="Queues1" Type="Self.Queues" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Queues">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Queues1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="proc_GetCustomerByQueue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrderInQueue" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="DBFModelStoreContainer">
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Queues" EntityType="Self.Queues" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Customers_Queues" Association="Self.FK_Customers_Queues">
+            <End Role="Queues" EntitySet="Queues" />
+            <End Role="Customers" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Queues_Queues" Association="Self.FK_Queues_Queues">
+            <End Role="Queues" EntitySet="Queues" />
+            <End Role="Queues1" EntitySet="Queues" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBFModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fullname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="QueueId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Queues" Relationship="Self.FK_Customers_Queues" FromRole="Customers" ToRole="Queues" />
+        </EntityType>
+        <EntityType Name="Queues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderInQueue" Type="Int32" Nullable="false" />
+          <Property Name="InService" Type="Boolean" Nullable="false" />
+          <Property Name="CheckIn" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Customers_Queues" FromRole="Queues" ToRole="Customers" />
+          <NavigationProperty Name="Queues1" Relationship="Self.FK_Queues_Queues" FromRole="Queues" ToRole="Queues1" />
+          <NavigationProperty Name="Queues2" Relationship="Self.FK_Queues_Queues" FromRole="Queues1" ToRole="Queues" />
+        </EntityType>
+        <Association Name="FK_Customers_Queues">
+          <End Role="Queues" Type="Self.Queues" Multiplicity="1" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Queues">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customers">
+              <PropertyRef Name="QueueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Queues_Queues">
+          <End Role="Queues" Type="Self.Queues" Multiplicity="1" />
+          <End Role="Queues1" Type="Self.Queues" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Queues">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Queues1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBFEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="Self.Customers" />
+          <EntitySet Name="Queues" EntityType="Self.Queues" />
+          <AssociationSet Name="FK_Customers_Queues" Association="Self.FK_Customers_Queues">
+            <End Role="Queues" EntitySet="Queues" />
+            <End Role="Customers" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Queues_Queues" Association="Self.FK_Queues_Queues">
+            <End Role="Queues" EntitySet="Queues" />
+            <End Role="Queues1" EntitySet="Queues" />
+          </AssociationSet>
+          <FunctionImport Name="proc_GetCustomerByQueue" ReturnType="Collection(DBFModel.proc_GetCustomerByQueue_Result)">
+            <Parameter Name="OrderInQueue" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="proc_GetCustomerByQueue_Result">
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="CustomerFullname" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="QueueId" Nullable="false" />
+          <Property Type="Int32" Name="OrderInQueue" Nullable="false" />
+          <Property Type="Boolean" Name="InService" Nullable="false" />
+          <Property Type="DateTime" Name="CheckIn" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBFModelStoreContainer" CdmEntityContainer="DBFEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="DBFModel.Customers">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="QueueId" ColumnName="QueueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Queues">
+            <EntityTypeMapping TypeName="DBFModel.Queues">
+              <MappingFragment StoreEntitySet="Queues">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderInQueue" ColumnName="OrderInQueue" />
+                <ScalarProperty Name="InService" ColumnName="InService" />
+                <ScalarProperty Name="CheckIn" ColumnName="CheckIn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="proc_GetCustomerByQueue" FunctionName="DBFModel.Store.proc_GetCustomerByQueue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBFModel.proc_GetCustomerByQueue_Result">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerFullname" ColumnName="CustomerFullname" />
+                <ScalarProperty Name="QueueId" ColumnName="QueueId" />
+                <ScalarProperty Name="OrderInQueue" ColumnName="OrderInQueue" />
+                <ScalarProperty Name="InService" ColumnName="InService" />
+                <ScalarProperty Name="CheckIn" ColumnName="CheckIn" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
